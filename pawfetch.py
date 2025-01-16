@@ -28,7 +28,11 @@ def load_config():
 
 def get_cpu_info():
     cpu_info = subprocess.check_output("lscpu | grep 'Model name:'", shell=True).decode().strip()
-    return cpu_info.split(":")[1].strip().lower().split(" @")[0].replace(" cpu", "")
+    cpu_name = cpu_info.split(":")[1].strip().lower().split(" @")[0].replace(" cpu", "")
+    if "amd" in cpu_name:
+        return cpu_name.replace("amd", "").strip()
+    else:
+        return cpu_name.replace("intel(r) core(tm)", "").replace("cpu @", "").strip()
 
 def get_ram_info():
     mem = psutil.virtual_memory()
@@ -41,10 +45,12 @@ def get_gpu_info():
         gpu_info = subprocess.check_output("lspci | grep -i 'vga\\|3d\\|display'", shell=True).decode().lower()
         if "nvidia" in gpu_info:
             return gpu_info.split("[")[1].split("]")[0].strip()
+        elif "amd" in gpu_info:
+            return gpu_info.split(":")[-1].strip().replace("amd", "")
         else:
             return gpu_info.split(":")[-1].strip()
     except subprocess.CalledProcessError:
-        return "gpu isn't supported :3"
+        return "unsupported gpu :3"
 
 def get_distro():
     try:
