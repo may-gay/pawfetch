@@ -12,7 +12,8 @@ def load_config():
     config = configparser.ConfigParser()
     config['settings'] = {
         'title_color': '#f5c2e7',
-        'info_color': '#cdd6f4',
+        'info_color': '#f5c2e7',
+        'info_sub_color': '#cdd6f4',
         'ascii_color1': '#74c7ec',
         'ascii_color2': '#f5c2e7',
         'ascii_color3': '#cdd6f4',
@@ -50,7 +51,7 @@ def get_gpu_info():
         else:
             return gpu_info.split(":")[-1].strip()
     except subprocess.CalledProcessError:
-        return "unsupported gpu :3"
+        return "gpu isn't supported :3"
 
 def get_distro():
     try:
@@ -127,13 +128,13 @@ def pawfetch():
     uptime = get_uptime()
 
     info = f"""    🐾 {colorize(title, settings['title_color'])} 🐾
-    {colorize('os',  settings['info_color'])}      {colorize(distro, settings['info_color'])}
-    {colorize('krnl',  settings['info_color'])}    {colorize(kernel, settings['info_color'])}
-    {colorize('pkgs',  settings['info_color'])}    {colorize(packages, settings['info_color'])}
-    {colorize('cpu',  settings['info_color'])}     {colorize(cpu_info, settings['info_color'])}
-    {colorize('gpu',  settings['info_color'])}     {colorize(gpu_info, settings['info_color'])}
-    {colorize('mem',  settings['info_color'])}     {colorize(ram_info, settings['info_color'])}
-    {colorize('up',  settings['info_color'])}      {colorize(uptime, settings['info_color'])}
+    {colorize('os',  settings['info_color'])}      {colorize(distro, settings['info_sub_color'])}
+    {colorize('krnl',  settings['info_color'])}    {colorize(kernel, settings['info_sub_color'])}
+    {colorize('pkgs',  settings['info_color'])}    {colorize(packages, settings['info_sub_color'])}
+    {colorize('cpu',  settings['info_color'])}     {colorize(cpu_info, settings['info_sub_color'])}
+    {colorize('gpu',  settings['info_color'])}     {colorize(gpu_info, settings['info_sub_color'])}
+    {colorize('mem',  settings['info_color'])}     {colorize(ram_info, settings['info_sub_color'])}
+    {colorize('up',  settings['info_color'])}      {colorize(uptime, settings['info_sub_color'])}
     """
 
     lines_art = colored_art.splitlines()
