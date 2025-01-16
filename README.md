@@ -2,10 +2,6 @@
 
 pawfetch is the cutest fetch script, featuring (trans)puppies! pawfetch provides an aesthetically pleasing terminal fetch with system information, all displayed in the catppuccin color scheme! (https://catppuccin.com/)
 
-## dependencies
-1. python
-2. python-psutil
-
 ## installation
    ```
    git clone https://github.com/jade-gay/pawfetch.git
@@ -28,8 +24,8 @@ hostname_format = {user}@{hostname}
 ```
 
 ## dependencies
-python 3
-psutil
+1. python 3
+2. psutil
 
 ## license
 this project is licensed under the GPL license
