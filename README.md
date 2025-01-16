@@ -16,7 +16,8 @@ example configuration:
 ```
 [settings]
 title_color = #f5c2e7
-info_color = #cdd6f4
+info_color = #f5c2e7
+info_sub_color = #cdd6f4
 ascii_color1 = #74c7ec
 ascii_color2 = #f5c2e7
 ascii_color3 = #cdd6f4
