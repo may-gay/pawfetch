@@ -21,7 +21,7 @@ info_sub_color = #cdd6f4
 ascii_color1 = #74c7ec
 ascii_color2 = #f5c2e7
 ascii_color3 = #cdd6f4
-hostname_format = {user}@{hostname}
+hostname_format = 🐾 {user}@{hostname} 🐾
 ```
 
 ## dependencies
