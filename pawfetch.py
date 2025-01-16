@@ -17,7 +17,7 @@ def load_config():
         'ascii_color1': '#74c7ec',
         'ascii_color2': '#f5c2e7',
         'ascii_color3': '#cdd6f4',
-        'hostname_format': '{user}@{hostname}'
+        'hostname_format': '🐾 {user}@{hostname} 🐾'
     }
     if not os.path.exists(CONFIG_PATH):
         os.makedirs(os.path.dirname(CONFIG_PATH), exist_ok=True)
@@ -127,7 +127,7 @@ def pawfetch():
     packages = get_packages()
     uptime = get_uptime()
 
-    info = f"""    🐾 {colorize(title, settings['title_color'])} 🐾
+    info = f"""    {colorize(title, settings['title_color'])}
     {colorize('os',  settings['info_color'])}      {colorize(distro, settings['info_sub_color'])}
     {colorize('krnl',  settings['info_color'])}    {colorize(kernel, settings['info_sub_color'])}
     {colorize('pkgs',  settings['info_color'])}    {colorize(packages, settings['info_sub_color'])}
