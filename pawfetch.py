@@ -17,7 +17,7 @@ def load_config():
         'ascii_color1': '#74c7ec',
         'ascii_color2': '#f5c2e7',
         'ascii_color3': '#cdd6f4',
-        'hostname_format': '🐾 {user}@{hostname} 🐾'
+        'hostname_format': '{user}@{hostname}'
     }
     if not os.path.exists(CONFIG_PATH):
         os.makedirs(os.path.dirname(CONFIG_PATH), exist_ok=True)
@@ -31,15 +31,24 @@ def get_cpu_info():
     cpu_info = subprocess.check_output("lscpu | grep 'Model name:'", shell=True).decode().strip()
     cpu_name = cpu_info.split(":")[1].strip().lower().split(" @")[0].replace(" cpu", "")
     if "amd" in cpu_name:
-        return cpu_name.replace("amd", "").strip()
+        cpu_name = cpu_name.replace("amd", "").strip()
+        pos = cpu_name.find("-core processor")
+        if pos != -1:
+            space_pos = cpu_name.rfind(" ", 0, pos)
+            if space_pos != -1:
+                cpu_name = cpu_name[:space_pos].strip()
     else:
-        return cpu_name.replace("intel(r) core(tm)", "").replace("cpu @", "").strip()
+        cpu_name = cpu_name.replace("intel(r) core(tm)", "").replace("cpu @", "").strip()
+    return cpu_name
 
 def get_ram_info():
     mem = psutil.virtual_memory()
-    total_memory = mem.total / (1024 ** 3)
+    total_memory_float = mem.total / (1024 ** 3)
+    total_memory = int(total_memory_float)
+    if total_memory_float > total_memory:
+         total_memory += 1
     used_memory = (mem.total - mem.available) / (1024 ** 3)
-    return f"{used_memory:.0f} gb / {total_memory:.0f} gb"
+    return f"{used_memory:.0f} gb / {total_memory} gb"
 
 def get_gpu_info():
     try:
@@ -98,16 +107,16 @@ def pawfetch():
     config = load_config()
     settings = config['settings']
     
-    ascii_art = r"""⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣠⣄⢀⡀⠀⠀⠀⠀
-⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢿⣿⣿⡿⠀⠀⠀⠀
-⠀⠀⠀⠀⣀⣀⣤⠖⠛⠉⠉⠉⠉⠉⠙⠒⠦⣿⣏⣀⠀⠀⠀⠀
-⠀⠀⣠⠞⠁⠀⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⢵⡄⠀⠀
-⠀⢰⣯⠀⠀⢀⠂⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣀⠀⠀⣿⠀⠀
-⠀⠈⣇⢀⢠⠇⠀⣶⡶⠄⠀⠀⠀⢠⣶⡶⠀⠀⣸⣀⣼⠟⠀⠀
-⠀⠀⠙⠛⠾⡆⠀⠙⠛⠃⠀⠀⠀⠀⠙⠋⠀⠀⣹⠟⠁⠀⠀⠀
-⢀⡴⠚⠉⠛⢿⠀⠀⠀⠀⢿⣿⠆⠀⠀⠀⠀⢀⣿⠋⠉⠉⢳⡄
-⢾⡀⡄⠀⣄⡼⠻⢧⠤⣤⠤⠤⣤⣠⣦⣾⠶⠞⢿⣤⡄⣠⣀⡷
-⠈⠙⠛⠋⠉⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠉⠉⠉⠀
+    ascii_art = r"""   ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣠⣄⢀⡀⠀⠀⠀⠀
+   ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢿⣿⣿⡿⠀⠀⠀⠀
+   ⠀⠀⠀⠀⣀⣀⣤⠖⠛⠉⠉⠉⠉⠉⠙⠒⠦⣿⣏⣀⠀⠀⠀⠀
+   ⠀⠀⣠⠞⠁⠀⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⢵⡄⠀⠀
+   ⠀⢰⣯⠀⠀⢀⠂⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣀⠀⠀⣿⠀⠀
+   ⠀⠈⣇⢀⢠⠇⠀⣶⡶⠄⠀⠀⠀⢠⣶⡶⠀⠀⣸⣀⣼⠟⠀⠀
+   ⠀⠀⠙⠛⠾⡆⠀⠙⠛⠃⠀⠀⠀⠀⠙⠋⠀⠀⣹⠟⠁⠀⠀⠀
+   ⢀⡴⠚⠉⠛⢿⠀⠀⠀⠀⢿⣿⠆⠀⠀⠀⠀⢀⣿⠋⠉⠉⢳⡄
+   ⢾⡀⡄⠀⣄⡼⠻⢧⠤⣤⠤⠤⣤⣠⣦⣾⠶⠞⢿⣤⡄⣠⣀⡷
+   ⠈⠙⠛⠋⠉⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠉⠉⠉⠀
     """
     colored_art = '\n'.join([
         colorize(line, settings['ascii_color1']) if idx % 3 == 0 else
@@ -127,7 +136,7 @@ def pawfetch():
     packages = get_packages()
     uptime = get_uptime()
 
-    info = f"""    {colorize(title, settings['title_color'])}
+    info = f"""\n    🐾 {colorize(title, settings['title_color'])} 🐾 \n
     {colorize('os',  settings['info_color'])}      {colorize(distro, settings['info_sub_color'])}
     {colorize('krnl',  settings['info_color'])}    {colorize(kernel, settings['info_sub_color'])}
     {colorize('pkgs',  settings['info_color'])}    {colorize(packages, settings['info_sub_color'])}
